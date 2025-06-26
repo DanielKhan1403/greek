@@ -39,6 +39,7 @@ urlpatterns = [
     path('grappelli/', include('grappelli.urls')),
     path('greek-admin/admin/', admin.site.urls),
     path('api/v1/main', include('article_post.urls')),
+    path('api/v1/social-works/', include('social_works.urls')),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
