@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'imagekit',
     'article_post',
+    'social_works',
 ]
 
 MIDDLEWARE = [
