@@ -1,0 +1,12 @@
+{% extends "admin/change_list.html" %}
+{% load i18n admin_urls %}
+
+{% block object-tools-items %}
+    {{ block.super }}
+    <li>
+        <a href="{% url 'admin:social_works_bememberform_export' %}" class="grp-button grp-default">
+    Экспортировать в Excel
+        </a>
+
+    </li>
+{% endblock %}
