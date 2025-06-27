@@ -2,10 +2,13 @@ from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 from phonenumber_field.modelfields import PhoneNumberField
 
-
-# модель формы для того чтоб стать участником сообщества
-
 class BeMemberForm(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'В процессе'),
+        ('accepted', 'Принят'),
+        ('rejected', 'Отклонён'),
+    ]
+
     full_name = models.CharField(max_length=50)
     age = models.PositiveIntegerField(
         validators=[MinValueValidator(12), MaxValueValidator(26)],
@@ -18,6 +21,13 @@ class BeMemberForm(models.Model):
         verbose_name='Номер телефона (Узбекистан)'
     )
     message = models.TextField(verbose_name='Напишите о себе')
+
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='pending',
+        verbose_name='Статус заявки'
+    )
 
     def __str__(self):
         return f"{self.full_name} — {self.phone_number}"
