@@ -1,10 +1,12 @@
 from django.db import models
-from django.core.validators import MinValueValidator, MaxValueValidator
+
 from phonenumber_field.modelfields import PhoneNumberField
 from datetime import date
 from django.core.mail import send_mail
 from django.core.exceptions import ValidationError
 
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 class BeMemberForm(models.Model):
@@ -79,14 +81,26 @@ class BeMemberForm(models.Model):
         if self.pk:
             old = BeMemberForm.objects.get(pk=self.pk)
             if old.status != self.status:
+                # Determine the email template based on status
+                if self.status == 'accepted':
+                    template_name = "emails/status_accepted.html"
+                elif self.status == 'rejected':
+                    template_name = "emails/status_rejected.html"
+                else:
+                    template_name = "emails/status_update.html"  # Fallback for other statuses
+
+                html_message = render_to_string(template_name, {
+                    "full_name": self.full_name,
+                    "status": self.get_status_display()
+                })
+                plain_message = strip_tags(html_message)
+
                 send_mail(
-                    subject="Обновление статуса заявки",
-                    message=(
-                        f"Здравствуйте, {self.full_name}!\n\n"
-                        f"Статус вашей заявки обновлён: {self.get_status_display()}"
-                    ),
+                    subject="Обновление статуса вашей заявки",
+                    message=plain_message,
                     from_email="noreply@example.com",
                     recipient_list=[self.email],
+                    html_message=html_message,
                     fail_silently=True,
                 )
         super().save(*args, **kwargs)
