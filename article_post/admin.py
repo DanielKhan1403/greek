@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from .models import Post, PostImage, Events
+from .models import Post, PostImage, Events, Comment
 
 # Регистрация приложения с новым именем
 admin.site.site_header = _("Администрирование сайта")
@@ -24,6 +24,10 @@ class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'get_short_description', 'created_at')  # Используем кастомный метод
     readonly_fields = ('cover_preview', 'post_preview')
     inlines = [PostImageInline]
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(events=None)  # Показывать только те, что не являются Events
 
     def cover_preview(self, obj):
         return format_html('<img src="{}" style="max-height: 200px; max-width: 200px;" />', obj.cover_url)
@@ -85,3 +89,16 @@ class EventsAdmin(admin.ModelAdmin):
         """Короткое описание"""
         return obj.short_description
     get_short_description.short_description = 'Короткое описание'
+
+
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('post', 'ip_address', 'created_at', 'short_content')
+    search_fields = ('content', 'ip_address', 'user_agent', 'post__title')
+    list_filter = ('created_at',)
+    readonly_fields = ('ip_address', 'user_agent', 'fingerprint')
+
+    def short_content(self, obj):
+        return (obj.content[:50] + '...') if len(obj.content) > 50 else obj.content
+    short_content.short_description = 'Комментарий'

@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
-
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100, verbose_name='Заголовок')
@@ -70,3 +71,34 @@ class PostImage(models.Model):
 
     def __str__(self):
         return f"Изображение для {self.post.title}"
+
+
+
+
+
+
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Пост')
+    content = models.TextField(verbose_name='Комментарий')
+    created_at = models.DateTimeField(default=timezone.now, verbose_name='Создан')
+    ip_address = models.GenericIPAddressField(verbose_name='IP-адрес', blank=True, null=True)
+    user_agent = models.TextField(verbose_name='User-Agent', blank=True, null=True)
+    fingerprint = models.CharField(max_length=255, blank=True, null=True, verbose_name='Браузерный отпечаток')
+
+    class Meta:
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return f"Комментарий к '{self.post.title}' от {self.ip_address}"
+
+    def clean(self):
+        from django.contrib.auth.models import AnonymousUser
+        request = getattr(self, '_request', None)
+
+        # Только если сохранение не через админку
+        if request and not (hasattr(request, 'user') and (request.user.is_staff or request.user.is_superuser)):
+            if not self.ip_address or not self.user_agent:
+                raise ValidationError("IP-адрес и User-Agent обязательны для пользователей.")

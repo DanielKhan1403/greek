@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Post, Events, PostImage
+from .models import Post, Events, PostImage, Comment
+
 
 class PostImageSerializer(serializers.ModelSerializer):
     image_url = serializers.ReadOnlyField()
@@ -25,3 +26,11 @@ class EventsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Events
         fields = ['id', 'title', 'created_at', 'updated_at', 'description', 'short_description', 'cover', 'cover_url', 'event_date_time', 'images']
+
+
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = '__all__'
+        read_only_fields = ('ip_address', 'user_agent', 'created_at')
