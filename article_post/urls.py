@@ -1,6 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import PostViewSet, EventsViewSet, PostImageViewSet, AddCommentAPIView
+from .views import PostViewSet, EventsViewSet, PostImageViewSet
 
 router = DefaultRouter()
 router.register(r'posts', PostViewSet)
@@ -9,5 +9,5 @@ router.register(r'post-images', PostImageViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('add-comment/<uuid:post_id>/', AddCommentAPIView.as_view(), name='add_comment'),
+
 ]

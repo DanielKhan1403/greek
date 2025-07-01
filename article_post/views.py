@@ -32,23 +32,9 @@ class PostImageViewSet(CachedListRetrieveMixin, CacheInvalidationMixin, PublicRe
 
 
 
-# views.py
 
 
 
-class AddCommentAPIView(APIView):
-    def post(self, request, post_id):
-        post = get_object_or_404(Post, id=post_id)
-        serializer = CommentSerializer(data=request.data)
-        if serializer.is_valid():
-            ip = request.META.get('REMOTE_ADDR')
-            if Comment.objects.filter(post=post, ip_address=ip).exists():
-                return Response({'error': 'Вы уже оставляли комментарий к этому посту'}, status=403)
-            serializer.save(
-                post=post,
-                ip_address=ip,
-                user_agent=request.META.get('HTTP_USER_AGENT', '')
-            )
-            return Response({'success': 'Комментарий добавлен!'}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 

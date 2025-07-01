@@ -92,13 +92,3 @@ class EventsAdmin(admin.ModelAdmin):
 
 
 
-@admin.register(Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('post', 'ip_address', 'created_at', 'short_content')
-    search_fields = ('content', 'ip_address', 'user_agent', 'post__title')
-    list_filter = ('created_at',)
-    readonly_fields = ('ip_address', 'user_agent', 'fingerprint')
-
-    def short_content(self, obj):
-        return (obj.content[:50] + '...') if len(obj.content) > 50 else obj.content
-    short_content.short_description = 'Комментарий'
