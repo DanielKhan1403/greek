@@ -25,6 +25,10 @@ class PostAdmin(admin.ModelAdmin):
     readonly_fields = ('cover_preview', 'post_preview')
     inlines = [PostImageInline]
 
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(events=None)  # Показывать только те, что не являются Events
+
     def cover_preview(self, obj):
         return format_html('<img src="{}" style="max-height: 200px; max-width: 200px;" />', obj.cover_url)
     cover_preview.short_description = 'Предпросмотр обложки'
@@ -85,3 +89,6 @@ class EventsAdmin(admin.ModelAdmin):
         """Короткое описание"""
         return obj.short_description
     get_short_description.short_description = 'Короткое описание'
+
+
+

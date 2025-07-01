@@ -9,4 +9,5 @@ router.register(r'post-images', PostImageViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+
 ]

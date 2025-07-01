@@ -1,6 +1,7 @@
 import uuid
 from django.db import models
-
+from django.utils import timezone
+from django.core.exceptions import ValidationError
 class Post(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100, verbose_name='Заголовок')
@@ -70,3 +71,12 @@ class PostImage(models.Model):
 
     def __str__(self):
         return f"Изображение для {self.post.title}"
+
+
+
+
+
+
+
+
+
