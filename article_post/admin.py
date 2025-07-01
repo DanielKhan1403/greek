@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from .models import Post, PostImage, Events, Comment
+from .models import Post, PostImage, Events
 
 # Регистрация приложения с новым именем
 admin.site.site_header = _("Администрирование сайта")

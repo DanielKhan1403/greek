@@ -1,15 +1,10 @@
 from rest_framework import viewsets, status
-from rest_framework.response import Response
-from rest_framework.views import APIView
+
 
 from .mixin import CacheInvalidationMixin, CachedListRetrieveMixin, PublicReadOnlyMixin
-from .models import Post, Events, PostImage,Comment
-from .serializers import PostSerializer, EventsSerializer, PostImageSerializer, CommentSerializer
-from django.views.decorators.csrf import csrf_exempt
-from django.http import JsonResponse
-from django.views import View
-from django.utils.decorators import method_decorator
-from django.shortcuts import get_object_or_404
+from .models import Post, Events, PostImage
+from .serializers import PostSerializer, EventsSerializer, PostImageSerializer
+
 class PostViewSet(CachedListRetrieveMixin, CacheInvalidationMixin, PublicReadOnlyMixin, viewsets.ModelViewSet):
     queryset = Post.objects.prefetch_related('images')
     serializer_class = PostSerializer
