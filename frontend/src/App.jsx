@@ -1,73 +1,81 @@
-import { useEffect, useState } from 'react';
-import Preloader from './components/preloaders/Preloader';
-import Header from './components/smallcomponents/Header';
-import Footer from './components/smallcomponents/Footer'; // Импортируем компонент Footer
-import PostEventList from './components/PostEventListener';
+import { useState, useEffect } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Provider, useSelector } from "react-redux";
+import { store } from "./app/store";
 
-function App() {
+import Preloader from "./components/preloaders/Preloader";
+import Header from "./components/smallcomponents/Header";
+import Footer from "./components/smallcomponents/Footer";
+import Home from './components/PostEventListener'
+
+import PostDetail from "./features/posts/PostListDetail";
+import EventsList from "./features/events/EventsList";
+import EventDetail from "./features/events/EventsDetail";
+
+function AppContent() {
   const [loading, setLoading] = useState(true);
-  const MINIMUM_LOADER_TIME = 2000; // Минимальное время отображения прелоадера (2 секунды)
+  const { status: postsStatus } = useSelector((state) => state.posts);
+  const { status: eventsStatus } = useSelector((state) => state.events);
+
+  const MINIMUM_LOADER_TIME = 2000;
 
   useEffect(() => {
-    let isMounted = true;
     const startTime = Date.now();
 
-    // Функция для проверки загрузки ресурсов
-    const checkResourcesLoaded = () => {
-      // Симуляция загрузки данных
-      const fakeApiCall = new Promise((resolve) => setTimeout(resolve, 1000));
-
-      // Проверяем загрузку всех изображений на странице
-      const images = document.getElementsByTagName('img');
-      const imagePromises = Array.from(images).map(
+    const waitForImages = () => {
+      const images = document.getElementsByTagName("img");
+      const promises = Array.from(images).map(
         (img) =>
           new Promise((resolve) => {
             if (img.complete) resolve();
             else {
               img.onload = resolve;
-              img.onerror = resolve; // Обрабатываем ошибки загрузки
+              img.onerror = resolve;
             }
           })
       );
-
-      // Ожидаем завершения всех загрузок
-      Promise.all([fakeApiCall, ...imagePromises]).then(() => {
-        const elapsedTime = Date.now() - startTime;
-        const remainingTime = MINIMUM_LOADER_TIME - elapsedTime;
-
-        // Убедимся, что прелоадер показывается минимум MINIMUM_LOADER_TIME
-        if (remainingTime > 0) {
-          setTimeout(() => {
-            if (isMounted) setLoading(false);
-          }, remainingTime);
-        } else {
-          if (isMounted) setLoading(false);
-        }
-      });
+      return Promise.all(promises);
     };
 
-    checkResourcesLoaded();
-
-    return () => {
-      isMounted = false; // Предотвращаем обновление состояния после размонтирования
-    };
+    waitForImages().then(() => {
+      const elapsed = Date.now() - startTime;
+      const delay = MINIMUM_LOADER_TIME - elapsed;
+      if (delay > 0) {
+        setTimeout(() => setLoading(false), delay);
+      } else {
+        setLoading(false);
+      }
+    });
   }, []);
 
-  if (loading) {
-    return <Preloader />;
-  }
+  const globalLoading =
+    loading || postsStatus === "loading" || eventsStatus === "loading";
+
+  if (globalLoading) return <Preloader />;
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
-      <Header /> {/* Добавляем Header */}
-      <main className="pt-16 flex-grow flex items-center justify-center">
-        {/* pt-16 добавляет отступ сверху, чтобы контент не перекрывался фиксированным header'ом */}
-        
-        {/* Основной контент */}
-        <PostEventList />
+      <Header />
+      <main className="pt-16 flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/posts/:id" element={<PostDetail />} />
+          <Route path="/events" element={<EventsList />} />
+          <Route path="/events/:id" element={<EventDetail />} />
+        </Routes>
       </main>
-      <Footer /> {/* Добавляем Footer */}
+      <Footer />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Provider store={store}>
+      <Router>
+        <AppContent />
+      </Router>
+    </Provider>
   );
 }
 

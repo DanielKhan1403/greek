@@ -1,9 +1,10 @@
-
-import { configureStore } from "@reduxjs/toolkit";
-import contentReducer from "../features/contentSlice";
+import { configureStore } from '@reduxjs/toolkit';
+import postsReducer from '../features/posts/postsSlice';
+import eventsReducer from '../features/events/eventsSlice';
 
 export const store = configureStore({
   reducer: {
-    content: contentReducer,
+    posts: postsReducer,
+    events: eventsReducer,
   },
 });
