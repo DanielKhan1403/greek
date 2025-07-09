@@ -2,6 +2,16 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts } from "./postsSlice";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
+
+const cardVariant = {
+  hidden: { opacity: 0, y: 30 },
+  visible: (i) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.4, ease: "easeOut" },
+  }),
+};
 
 export default function PostsList() {
   const dispatch = useDispatch();
@@ -36,47 +46,39 @@ export default function PostsList() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-gray-50 min-h-screen">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-        Recent Posts
-      </h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post) => (
-          <Link
-            to={`/posts/${post.id}`}
+    <div className="px-2 sm:px-4 lg:px-0">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        {posts.map((post, i) => (
+          <motion.div
             key={post.id}
-            className="group bg-white rounded-xl shadow-lg overflow-hidden transform hover:-translate-y-1 hover:shadow-xl transition-all duration-300"
+            custom={i}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.2 }}
+            variants={cardVariant}
           >
-            <div className="relative">
-              <img
-                src={post.cover}
-                alt={post.title}
-                className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            </div>
-            <div className="p-5">
-              <h2 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200">
-                {post.title}
-              </h2>
-              <p className="text-gray-600 mt-2 line-clamp-3">
-                {post.short_description}
-              </p>
-              <div className="mt-3 text-sm text-gray-500">
-                <p>
-                  Создано:{" "}
-                  {new Date(post.created_at).toLocaleString("ru-RU", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
+            <Link
+              to={`/posts/${post.id}`}
+              className="group bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 border border-gray-100"
+            >
+              <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+  <img
+    src={post.cover}
+    alt={post.title}
+    className="max-h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+  />
+</div>
+              <div className="p-5 space-y-3">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+                  {post.title}
+                </h2>
+                <p className="text-gray-600 text-sm line-clamp-3">
+                  {post.short_description}
                 </p>
-                {post.updated_at && (
+                <div className="text-xs text-gray-500 mt-2 space-y-1">
                   <p>
-                    Обновлено:{" "}
-                    {new Date(post.updated_at).toLocaleString("ru-RU", {
+                    🗓️ Создано:{" "}
+                    {new Date(post.created_at).toLocaleString("ru-RU", {
                       year: "numeric",
                       month: "long",
                       day: "numeric",
@@ -84,15 +86,27 @@ export default function PostsList() {
                       minute: "2-digit",
                     })}
                   </p>
-                )}
+                  {post.updated_at && (
+                    <p>
+                      🔄 Обновлено:{" "}
+                      {new Date(post.updated_at).toLocaleString("ru-RU", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </p>
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="px-5 pb-5">
-              <span className="inline-block text-sm font-semibold text-blue-600 group-hover:underline">
-                Read More
-              </span>
-            </div>
-          </Link>
+              <div className="px-5 pb-5">
+                <span className="inline-block text-sm font-medium text-blue-600 group-hover:underline transition">
+                  Читать полностью →
+                </span>
+              </div>
+            </Link>
+          </motion.div>
         ))}
       </div>
     </div>
