@@ -3,4 +3,6 @@ media/
 db.sqlite3/
 .env/ 
 .env 
+node_modules/
+
 

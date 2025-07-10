@@ -1,17 +1,23 @@
 from django.contrib import admin
+from django.contrib.contenttypes.admin import GenericTabularInline
 from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
-from .models import Post, PostImage, Events
+from .models import PostImage
 
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
+from django.core.cache import cache
+from .models import Post, Event
 # Регистрация приложения с новым именем
 admin.site.site_header = _("Администрирование сайта")
 admin.site.index_title = _("Добро пожаловать в админку")
 admin.site.site_title = _("Админ-панель")
 
-class PostImageInline(admin.TabularInline):
+class PostImageInline(GenericTabularInline):
     model = PostImage
     extra = 3
     readonly_fields = ('image_preview',)
+    fields = ['image', 'caption', 'image_preview']
 
     def image_preview(self, obj):
         if obj.image and hasattr(obj.image, 'url'):
@@ -21,17 +27,28 @@ class PostImageInline(admin.TabularInline):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'get_short_description', 'created_at')  # Используем кастомный метод
+    list_display = ('title', 'get_short_description', 'created_at')
+    list_filter = ['created_at', 'updated_at']
+    search_fields = ['title', 'description']
     readonly_fields = ('cover_preview', 'post_preview')
     inlines = [PostImageInline]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
-        return qs.filter(events=None)  # Показывать только те, что не являются Events
+        return qs  # Удален prefetch_related, так как images использует GenericForeignKey
 
     def cover_preview(self, obj):
         return format_html('<img src="{}" style="max-height: 200px; max-width: 200px;" />', obj.cover_url)
     cover_preview.short_description = 'Предпросмотр обложки'
+
+    @receiver(post_save, sender=Post)
+    @receiver(post_delete, sender=Post)
+    def invalidate_post_cache(sender, **kwargs):
+        cache.delete_pattern('posts_*')
+
+    def delete_queryset(self, request, queryset):
+        super().delete_queryset(request, queryset)
+        cache.delete_pattern('posts_*')  # или 'events_*' в EventAdmin
 
     def post_preview(self, obj):
         preview = f"""
@@ -44,7 +61,7 @@ class PostAdmin(admin.ModelAdmin):
             </div>
             <div>
                 <strong>Дополнительные изображения:</strong><br>
-                {''.join([f'<img src="{img.image_url}" style="max-height: 100px; max-width: 100px; margin-right: 10px;" alt="{img.caption}" />' for img in obj.images.all()]) or 'Нет изображений'}
+                {''.join([f'<img src="{img.image_url}" style="max-height: 100px; max-width: 100px; margin-right: 10px;" alt="{img.caption}" />' for img in PostImage.objects.filter(content_type__model='post', object_id=obj.id)]) or 'Нет изображений'}
             </div>
         </div>
         """
@@ -54,17 +71,33 @@ class PostAdmin(admin.ModelAdmin):
     def get_short_description(self, obj):
         """Короткое описание"""
         return obj.short_description
-    get_short_description.short_description = 'Короткое описание'  # Задаём читаемое имя
+    get_short_description.short_description = 'Короткое описание'
 
-@admin.register(Events)
-class EventsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'short_description', 'event_date_time', 'created_at')
+@admin.register(Event)
+class EventAdmin(admin.ModelAdmin):
+    list_display = ('title', 'get_short_description', 'event_date_time', 'created_at')
+    list_filter = ['event_date_time', 'created_at']
+    search_fields = ['title', 'description']
     readonly_fields = ('cover_preview', 'post_preview')
     inlines = [PostImageInline]
+
+    def get_queryset(self, request):
+        # Возвращаем queryset без prefetch_related, так как images использует GenericForeignKey
+        qs = super().get_queryset(request)
+        return qs
 
     def cover_preview(self, obj):
         return format_html('<img src="{}" style="max-height: 200px; max-width: 200px;" />', obj.cover_url)
     cover_preview.short_description = 'Предпросмотр обложки'
+
+    @receiver(post_save, sender=Event)
+    @receiver(post_delete, sender=Event)
+    def invalidate_event_cache(sender, **kwargs):
+        cache.delete_pattern('events_*')
+
+    def delete_queryset(self, request, queryset):
+        super().delete_queryset(request, queryset)
+        cache.delete_pattern('events_*')  # или 'events_*' в EventAdmin
 
     def post_preview(self, obj):
         preview = f"""
@@ -78,17 +111,24 @@ class EventsAdmin(admin.ModelAdmin):
             <div>
                 <strong>Дата события:</strong> {obj.event_date_time.strftime('%Y-%m-%d %H:%M')}<br>
                 <strong>Дополнительные изображения:</strong><br>
-                {''.join([f'<img src="{img.image_url}" style="max-height: 100px; max-width: 100px; margin-right: 10px;" alt="{img.caption}" />' for img in obj.images.all()]) or 'Нет изображений'}
+                {''.join([f'<img src="{img.image_url}" style="max-height: 100px; max-width: 100px; margin-right: 10px;" alt="{img.caption}" />' for img in PostImage.objects.filter(content_type__model='event', object_id=obj.id)]) or 'Нет изображений'}
             </div>
         </div>
         """
         return format_html(preview)
-    post_preview.short_description = 'Предварительный просмотр поста'
+    post_preview.short_description = 'Предварительный просмотр события'
 
     def get_short_description(self, obj):
         """Короткое описание"""
         return obj.short_description
     get_short_description.short_description = 'Короткое описание'
 
+@admin.register(PostImage)
+class PostImageAdmin(admin.ModelAdmin):
+    list_display = ['content_object', 'image', 'caption']
+    list_filter = ['content_type']
+    search_fields = ['caption']
 
-
+    def content_object(self, obj):
+        return obj.content_object
+    content_object.short_description = 'Связанный объект'
