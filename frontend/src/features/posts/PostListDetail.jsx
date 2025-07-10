@@ -12,7 +12,7 @@ export default function PostDetail() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/v1/main/posts/${id}/`)
+      .get(`${BASE_URL}/api/v1/main/posts/${id}/`)
       .then((res) => setPost(res.data))
       .catch((err) => console.error("Error fetching post:", err));
   }, [id]);

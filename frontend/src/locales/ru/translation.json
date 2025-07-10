@@ -2,5 +2,31 @@
   "home": "Главная",
   "services": "Услуги",
   "projects": "Проекты",
-  "contact": "Контакты"
+  "contact": "Контакты",
+  "loading": "Загрузка постов...",
+  "error": "Ошибка",
+  "created": "Создано",
+  "updated": "Обновлено",
+  "read_more": "Читать полностью →",
+  "loading_events": "Загрузка событий...",
+  "latest_posts_title": "Последние посты",
+  "latest_posts_subtitle": "Узнайте о самых свежих новостях, историях и обновлениях.",
+  "upcoming_events_title": "Предстоящие события",
+  "upcoming_events_subtitle": "Не пропустите самые интересные мероприятия и активности.",
+  "title": "Форма вступления в греческую диаспору",
+    "success_message": "Форма успешно отправлена!",
+    "submit": "Отправить заявку",
+    "full_name": "Фамилия Имя Отчество",
+    "birth_date": "Дата рождения (ГГГГ-ММ-ДД)",
+    "phone_number": "Номер телефона",
+    "telegram_account": "Telegram аккаунт",
+    "email": "Email",
+    "address": "Домашний адрес",
+    "greek_ancestor_relation": "Кто из ваших предков грек?",
+    "greek_ancestor_surname": "Фамилия греческого предка",
+    "about_yourself": "Дополнительные сведения о себе",
+    "interested_activities": "Интересующая общественная деятельность",
+    "your_contribution": "Ваш вклад в развитие центра"
 }
+  
+

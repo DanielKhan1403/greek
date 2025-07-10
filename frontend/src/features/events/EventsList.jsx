@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchEvents } from "./eventsSlice";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 const cardVariant = {
   hidden: { opacity: 0, y: 30 },
@@ -14,6 +15,7 @@ const cardVariant = {
 };
 
 export default function EventsList() {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const events = useSelector((state) => state.events.items);
   const status = useSelector((state) => state.events.status);
@@ -29,7 +31,7 @@ export default function EventsList() {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-xl font-semibold text-gray-700 animate-pulse">
-          Загрузка событий...
+          {t("loading_events")}
         </div>
       </div>
     );
@@ -39,7 +41,7 @@ export default function EventsList() {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-xl font-semibold text-red-600">
-          Ошибка: {error}
+          {t("error")}: {error}
         </div>
       </div>
     );
@@ -62,12 +64,12 @@ export default function EventsList() {
               className="group bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 border border-gray-100"
             >
               <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
-  <img
-    src={event.cover}
-    alt={event.title}
-    className="max-h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
-  />
-</div>
+                <img
+                  src={event.cover}
+                  alt={event.title}
+                  className="max-h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
               <div className="p-5 space-y-3">
                 <h2 className="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
                   {event.title}
@@ -89,7 +91,7 @@ export default function EventsList() {
               </div>
               <div className="px-5 pb-5">
                 <span className="inline-block text-sm font-medium text-blue-600 group-hover:underline transition">
-                  Подробнее →
+                  {t("read_more")}
                 </span>
               </div>
             </Link>

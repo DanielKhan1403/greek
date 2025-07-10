@@ -11,6 +11,7 @@ import Home from './components/PostEventListener'
 import PostDetail from "./features/posts/PostListDetail";
 import EventsList from "./features/events/EventsList";
 import EventDetail from "./features/events/EventsDetail";
+import BeMemberForm from "./components/BeMemberForm";
 
 function AppContent() {
   const [loading, setLoading] = useState(true);
@@ -59,6 +60,8 @@ function AppContent() {
       <main className="pt-16 flex-grow">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/bemember" element={<BeMemberForm />} />
+
           <Route path="/posts/:id" element={<PostDetail />} />
           <Route path="/events" element={<EventsList />} />
           <Route path="/events/:id" element={<EventDetail />} />

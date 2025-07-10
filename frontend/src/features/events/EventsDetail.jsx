@@ -12,7 +12,7 @@ export default function EventDetail() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8000/api/v1/main/events/${id}/`)
+      .get(`${BASE_URL}/api/v1/main/events/${id}/`)
       .then((res) => setEvent(res.data))
       .catch((err) => console.error("Error fetching event:", err));
   }, [id]);
