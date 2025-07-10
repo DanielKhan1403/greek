@@ -25,7 +25,9 @@ class CacheInvalidationMixin:
         if self.cache_prefix:
             cache.delete_pattern(f"{self.cache_prefix}_*")
         else:
-            cache.clear()  # Резервный вариант, если cache_prefix не задан
+            # Лучше выбросить ошибку, чтобы не чистить весь кэш
+            logger.warning("cache_prefix не задан, кэш не был сброшен.")
+
 
 class CachedListRetrieveMixin:
     cache_prefix = None  # обязательно указать в ViewSet
