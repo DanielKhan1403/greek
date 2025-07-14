@@ -18,9 +18,9 @@ class BeMemberForm(models.Model):
 
     full_name = models.CharField(max_length=100, verbose_name='Фамилия Имя Отчество')
     birth_date = models.DateField(verbose_name='Дата рождения (число, месяц, год)')
-    phone_number = PhoneNumberField(region="UZ", verbose_name='Номер телефона')
+    phone_number = PhoneNumberField(region="UZ", verbose_name='Номер телефона', unique=True)
     telegram_account = models.CharField(max_length=100, blank=True, null=True, verbose_name='Telegram аккаунт')
-    email = models.EmailField(verbose_name='E-Mail', default=None)
+    email = models.EmailField(verbose_name='E-Mail', default=None, unique=True)
     address = models.TextField(verbose_name='Домашний адрес')
 
     greek_ancestor_relation = models.CharField(

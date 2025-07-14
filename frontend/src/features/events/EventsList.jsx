@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchEvents } from "./eventsSlice";
 import { Link } from "react-router-dom";
@@ -17,17 +17,31 @@ const cardVariant = {
 export default function EventsList() {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const events = useSelector((state) => state.events.items);
+  const reduxEvents = useSelector((state) => state.events.items);
   const status = useSelector((state) => state.events.status);
   const error = useSelector((state) => state.events.error);
 
+  const [cachedEvents, setCachedEvents] = useState(() => {
+    const cached = localStorage.getItem("cachedEvents");
+    return cached ? JSON.parse(cached) : null;
+  });
+
   useEffect(() => {
-    if (status === "idle") {
+    if (!cachedEvents && status === "idle") {
       dispatch(fetchEvents());
     }
-  }, [status, dispatch]);
+  }, [status, dispatch, cachedEvents]);
 
-  if (status === "loading") {
+  useEffect(() => {
+    if (reduxEvents?.length) {
+      setCachedEvents(reduxEvents);
+      localStorage.setItem("cachedEvents", JSON.stringify(reduxEvents));
+    }
+  }, [reduxEvents]);
+
+  const eventsToRender = cachedEvents || [];
+
+  if (!eventsToRender.length && status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-xl font-semibold text-gray-700 animate-pulse">
@@ -48,30 +62,32 @@ export default function EventsList() {
   }
 
   return (
-    <div className="px-2 sm:px-4 lg:px-0">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-        {events.map((event, i) => (
-          <motion.div
+    <div className="w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+        {eventsToRender.map((event, i) => (
+          <motion.article
             key={event.id}
             custom={i}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, amount: 0.2 }}
+            viewport={{ once: true, amount: 0.15 }}
             variants={cardVariant}
           >
             <Link
               to={`/events/${event.id}`}
-              className="group bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 border border-gray-100"
+              className="group bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 border border-gray-100 flex flex-col"
             >
-              <div className="w-full h-64 bg-gray-100 flex items-center justify-center overflow-hidden">
+              <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
                 <img
                   src={event.cover}
-                  alt={event.title}
-                  className="max-h-full w-auto object-contain transition-transform duration-300 group-hover:scale-105"
+                  alt={event.title || "Изображение события"}
+                  loading="lazy"
+                  decoding="async"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
               </div>
-              <div className="p-5 space-y-3">
-                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors duration-200 line-clamp-2">
+              <div className="p-5 flex flex-col justify-between flex-1 space-y-3">
+                <h2 className="text-lg sm:text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors line-clamp-2">
                   {event.title}
                 </h2>
                 <p className="text-sm text-gray-500 font-medium">
@@ -95,7 +111,7 @@ export default function EventsList() {
                 </span>
               </div>
             </Link>
-          </motion.div>
+          </motion.article>
         ))}
       </div>
     </div>
