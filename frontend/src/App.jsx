@@ -12,6 +12,9 @@ import PostDetail from "./features/posts/PostListDetail";
 import EventsList from "./features/events/EventsList";
 import EventDetail from "./features/events/EventsDetail";
 import BeMemberForm from "./components/BeMemberForm";
+import PostsList from "./features/posts/PostList";
+import AboutUs from "./components/AboutUs";
+import NotFound from "./components/NotFound";
 
 function AppContent() {
   const [loading, setLoading] = useState(true);
@@ -61,10 +64,14 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/bemember" element={<BeMemberForm />} />
+          <Route path='/posts' element={<PostsList /> } />
+          <Route path='/aboutus' element={<AboutUs /> } />
+
 
           <Route path="/posts/:id" element={<PostDetail />} />
           <Route path="/events" element={<EventsList />} />
           <Route path="/events/:id" element={<EventDetail />} />
+          <Route path="*" element={<NotFound />} /> {/* Этот должен быть последним */}
         </Routes>
       </main>
       <Footer />

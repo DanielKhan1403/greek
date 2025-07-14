@@ -1,8 +1,11 @@
+
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { BASE_URL } from "../../BaseUrl";
+
+const LOCAL_STORAGE_KEY = "event-detail-cache";
 
 export default function EventDetail() {
   const { id } = useParams();
@@ -11,9 +14,26 @@ export default function EventDetail() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
+    const cache = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (cache) {
+      try {
+        const parsed = JSON.parse(cache);
+        if (parsed?.id?.toString() === id?.toString()) {
+          setEvent(parsed);
+        }
+      } catch (e) {
+        console.error("Ошибка чтения кэша:", e);
+      }
+    }
+  }, [id]);
+
+  useEffect(() => {
     axios
       .get(`${BASE_URL}/api/v1/main/events/${id}/`)
-      .then((res) => setEvent(res.data))
+      .then((res) => {
+        setEvent(res.data);
+        localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(res.data));
+      })
       .catch((err) => console.error("Error fetching event:", err));
   }, [id]);
 
@@ -22,9 +42,7 @@ export default function EventDetail() {
     setCurrentImageIndex(index);
   };
 
-  const closeImageViewer = () => {
-    setSelectedImage(null);
-  };
+  const closeImageViewer = () => setSelectedImage(null);
 
   const goToPreviousImage = () => {
     const newIndex = (currentImageIndex - 1 + event.images.length) % event.images.length;
@@ -46,8 +64,7 @@ export default function EventDetail() {
     );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6 md:p-10 lg:p-16 max-w-7xl mx-auto font-['Inter']">
-      {/* Cover Image with Parallax Effect */}
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-4 sm:p-6 md:p-10 lg:p-16 max-w-7xl mx-auto font-['Inter']">
       <motion.div
         className="relative overflow-hidden rounded-3xl shadow-2xl mb-10"
         initial={{ opacity: 0, y: 30 }}
@@ -66,9 +83,8 @@ export default function EventDetail() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
       </motion.div>
 
-      {/* Event Title */}
       <motion.h1
-        className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 tracking-tight text-center"
+        className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 tracking-tight text-center"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -76,9 +92,8 @@ export default function EventDetail() {
         {event.title}
       </motion.h1>
 
-      {/* Event Date and Time */}
       <motion.p
-        className="text-lg text-gray-500 mb-8 italic text-center"
+        className="text-base sm:text-lg text-gray-500 mb-8 italic text-center"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
@@ -89,9 +104,8 @@ export default function EventDetail() {
         })}
       </motion.p>
 
-      {/* Event Description */}
       <motion.p
-        className="text-gray-700 text-lg leading-relaxed mb-12 max-w-4xl mx-auto text-center"
+        className="text-gray-700 text-base sm:text-lg leading-relaxed mb-12 max-w-4xl mx-auto text-center break-words"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
@@ -99,7 +113,6 @@ export default function EventDetail() {
         {event.description}
       </motion.p>
 
-      {/* Image Gallery */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
         {event.images.map((image, index) => (
           <motion.div
@@ -131,7 +144,6 @@ export default function EventDetail() {
         ))}
       </div>
 
-      {/* Image Viewer Modal */}
       <AnimatePresence>
         {selectedImage && (
           <motion.div
@@ -142,31 +154,24 @@ export default function EventDetail() {
             transition={{ duration: 0.3 }}
           >
             <div className="relative w-full max-w-4xl">
-              {/* Close Button */}
               <button
                 className="absolute top-4 right-4 text-white text-2xl font-bold bg-gray-900/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-900/70 transition"
                 onClick={closeImageViewer}
               >
                 ×
               </button>
-
-              {/* Previous Button */}
               <button
                 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-white text-3xl bg-gray-900/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-900/70 transition"
                 onClick={goToPreviousImage}
               >
                 ‹
               </button>
-
-              {/* Next Button */}
               <button
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-white text-3xl bg-gray-900/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-900/70 transition"
                 onClick={goToNextImage}
               >
                 ›
               </button>
-
-              {/* Image */}
               <motion.img
                 src={`${BASE_URL}${selectedImage.image_url || selectedImage.image}`}
                 alt={selectedImage.caption || "Изображение события"}
@@ -175,8 +180,6 @@ export default function EventDetail() {
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
               />
-
-              {/* Caption */}
               {selectedImage.caption && (
                 <motion.p
                   className="text-white text-center mt-4 text-lg font-medium"
