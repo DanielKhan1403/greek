@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import axios from "axios";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
+import { BASE_URL } from "../BaseUrl"
 
 export default function BeMemberForm() {
   const { t } = useTranslation();
@@ -83,7 +84,7 @@ export default function BeMemberForm() {
         ?.split("=")[1];
 
       await axios.post(
-        "http://127.0.0.1:8000/api/v1/social-works/be-member/",
+        "`${BASE_URL}/api/v1/social-works/be-member/",
         formData,
         {
           headers: {

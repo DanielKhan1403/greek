@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from '../../assets/logo/logo.webp';
 
-const navLinks = ["home", "posts", "events", "contact", "aboutus"];
+const navLinks = ["home", "posts", "events", "contacts", "aboutus"];
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -97,7 +97,7 @@ const Header = () => {
           {navLinks.map((key) => (
             <a
               key={key}
-              href={`/${key}/`}
+               href={key === "home" ? "/" : `/${key}`}
               className="py-3 text-lg text-gray-700 hover:text-blue-600 transition-colors duration-200 font-medium"
               onClick={() => setIsOpen(false)}
             >
