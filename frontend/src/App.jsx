@@ -15,6 +15,8 @@ import BeMemberForm from "./components/BeMemberForm";
 import PostsList from "./features/posts/PostList";
 import AboutUs from "./components/AboutUs";
 import NotFound from "./components/NotFound";
+import { Contact } from "lucide-react";
+import Contacts from "./components/Contacts";
 
 function AppContent() {
   const [loading, setLoading] = useState(true);
@@ -66,6 +68,7 @@ function AppContent() {
           <Route path="/bemember" element={<BeMemberForm />} />
           <Route path='/posts' element={<PostsList /> } />
           <Route path='/aboutus' element={<AboutUs /> } />
+          <Route path="/contacts" element={<Contacts/>} />
 
 
           <Route path="/posts/:id" element={<PostDetail />} />

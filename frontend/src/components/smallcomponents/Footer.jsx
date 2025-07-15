@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import logo from '../../assets/logo/logo.webp';
 import { Instagram, Send } from "lucide-react";
 
-const navLinks = ["home", "posts", "events", "contact", "aboutus"];
+const navLinks = ["home", "posts", "events", "contacts", "aboutus"];
 
 const socialLinks = [
   {
@@ -94,14 +94,14 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="tel:+998901234567" className="hover:text-blue-400 transition">
-                  +998 90 123 45 67
+                <a href="tel:+998712562803" className="hover:text-blue-400 transition">
+                  +998712562803
                 </a>
               </li>
               <li>{t("city", "Tashkent, Uzbekistan")}</li>
             </ul>
             <div className="mt-4 text-gray-400 text-sm">
-              <p className="mb-2">{t("footer.addressLabel", "Our address")}:</p>
+              <p className="mb-2">{t("addressLabel", "Our address")}:</p>
               <a
                 href="https://yandex.uz/maps/10335/tashkent/house/YkAYdAFgQEcBQFprfX9xcXljZg==/?ll=69.260926%2C41.300502&z=17"
                 target="_blank"
