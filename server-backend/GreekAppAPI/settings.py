@@ -173,3 +173,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # это пароль приложения, а не основной
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+
+STATIC_ROOT = BASE_DIR / 'static'
