@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { BASE_URL } from "../../BaseUrl"
 
-const API_URL = '${BASE_URL}/api/v1/main/events/';
+const API_URL = `${BASE_URL}/api/v1/main/events/`;
 
 export const fetchEvents = createAsyncThunk('events/fetchEvents', async () => {
   const response = await axios.get(API_URL);

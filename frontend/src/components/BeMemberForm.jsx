@@ -84,7 +84,7 @@ export default function BeMemberForm() {
         ?.split("=")[1];
 
       await axios.post(
-        "`${BASE_URL}/api/v1/social-works/be-member/",
+        `${BASE_URL}/api/v1/social-works/be-member/`,
         formData,
         {
           headers: {
