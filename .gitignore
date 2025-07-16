@@ -1,0 +1,45 @@
+venv/
+media/
+db.sqlite3/
+.env/ 
+.env 
+node_modules/
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.log
+
+# Virtual environment
+venv/
+ENV/
+env/
+
+# Django
+*.db
+db.sqlite3
+/media/
+*.pot
+*.pyc
+
+# Django static
+staticfiles/
+django_static/
+static/
+
+# Vite/React
+node_modules/
+dist/
+
+# System
+.DS_Store
+*.swp
+
+# VSCode
+.vscode/
+
+# dotenv
+.env
+
+
+
