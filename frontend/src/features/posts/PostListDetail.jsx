@@ -7,7 +7,7 @@ import { BASE_URL } from "../../BaseUrl";
 export default function PostDetail() {
   const { id } = useParams();
   const [post, setPost] = useState(() => {
-    const cached = localStorage.getItem(`post_${id}`);
+    const cached = localStorage.getItem('posts_cache');
     return cached ? JSON.parse(cached) : null;
   });
 
@@ -19,7 +19,7 @@ export default function PostDetail() {
       .get(`${BASE_URL}/api/v1/main/posts/${id}/`)
       .then((res) => {
         setPost(res.data);
-        localStorage.setItem(`post_${id}`, JSON.stringify(res.data));
+        localStorage.setItem(`posts_cache`, JSON.stringify(res.data));
       })
       .catch((err) => {
         console.error("Error fetching post:", err);
@@ -47,17 +47,17 @@ export default function PostDetail() {
 
   if (!post) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-xl text-gray-400 font-['Inter'] animate-pulse">
+      <div className="flex items-center justify-center min-h-screen text-2xl text-gray-400 font-light animate-pulse">
         Загрузка...
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100 p-6 md:p-10 lg:p-16 max-w-7xl mx-auto font-['Inter']">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 p-6 md:p-10 lg:p-16 max-w-7xl mx-auto font-['Inter']">
       {/* Cover */}
       <motion.div
-        className="relative overflow-hidden rounded-3xl shadow-2xl mb-10"
+        className="relative overflow-hidden rounded-3xl shadow-2xl mb-14"
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 1, ease: "easeOut" }}
@@ -65,20 +65,20 @@ export default function PostDetail() {
         <motion.img
           src={`${BASE_URL}${post.cover_url}`}
           alt="Обложка поста"
-          className="w-full max-h-[600px] object-cover"
+          className="w-full max-h-[650px] object-cover"
           loading="eager"
           decoding="async"
-          initial={{ scale: 1.1 }}
+          initial={{ scale: 1.08 }}
           animate={{ scale: 1 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-          whileHover={{ scale: 1.05 }}
+          transition={{ duration: 1.3, ease: "easeOut" }}
+          whileHover={{ scale: 1.03 }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
       </motion.div>
 
       {/* Title + Description */}
       <motion.h1
-        className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 tracking-tight text-center"
+        className="text-5xl md:text-6xl font-extrabold text-gray-900 mb-6 tracking-tight text-center leading-tight"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.2, ease: "easeOut" }}
@@ -87,7 +87,7 @@ export default function PostDetail() {
       </motion.h1>
 
       <motion.p
-        className="text-gray-700 text-lg leading-relaxed mb-12 max-w-4xl mx-auto text-center"
+        className="text-gray-700 text-xl leading-relaxed mb-16 max-w-4xl mx-auto text-center"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.4, ease: "easeOut" }}
@@ -96,11 +96,11 @@ export default function PostDetail() {
       </motion.p>
 
       {/* Image Gallery */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         {post.images.map((img, index) => (
           <motion.div
             key={img.id}
-            className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 bg-white cursor-pointer"
+            className="relative group overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 bg-white cursor-pointer"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 * index }}
@@ -111,10 +111,10 @@ export default function PostDetail() {
               alt={img.caption || `Изображение ${index + 1}`}
               loading="lazy"
               decoding="async"
-              className="w-full h-72 object-cover transition-transform duration-700 group-hover:scale-110"
+              className="w-full h-80 object-cover transition-transform duration-700 group-hover:scale-110"
             />
             {img.caption && (
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent text-white text-sm font-medium p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent text-white text-base font-medium p-5 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 {img.caption}
               </div>
             )}
@@ -126,29 +126,33 @@ export default function PostDetail() {
       <AnimatePresence>
         {selectedImage && (
           <motion.div
-            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/85 backdrop-blur-sm flex items-center justify-center z-50 p-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="relative w-full max-w-4xl">
-              {/* Controls */}
+            <div className="relative w-full max-w-5xl">
+              {/* Close Button */}
               <button
                 onClick={closeImageViewer}
-                className="absolute top-4 right-4 text-white text-2xl font-bold bg-gray-900/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-900/70 transition"
+                className="absolute top-4 right-4 text-white text-3xl font-bold bg-gray-900/60 rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-900/80 transition"
               >
                 &times;
               </button>
+
+              {/* Prev Button */}
               <button
                 onClick={goToPreviousImage}
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-3xl bg-gray-900/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-900/70 transition"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-gray-900/60 rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-900/80 transition"
               >
                 &#8249;
               </button>
+
+              {/* Next Button */}
               <button
                 onClick={goToNextImage}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-3xl bg-gray-900/50 rounded-full w-10 h-10 flex items-center justify-center hover:bg-gray-900/70 transition"
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white text-4xl bg-gray-900/60 rounded-full w-12 h-12 flex items-center justify-center hover:bg-gray-900/80 transition"
               >
                 &#8250;
               </button>
@@ -157,10 +161,10 @@ export default function PostDetail() {
               <motion.img
                 src={`${BASE_URL}${selectedImage.image_url}`}
                 alt={selectedImage.caption || "Изображение поста"}
-                className="w-full max-h-[80vh] object-contain rounded-lg"
-                initial={{ scale: 0.8, opacity: 0 }}
+                className="w-full max-h-[80vh] object-contain rounded-xl shadow-xl"
+                initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
                 loading="eager"
                 decoding="async"
               />
@@ -168,7 +172,7 @@ export default function PostDetail() {
               {/* Caption */}
               {selectedImage.caption && (
                 <motion.p
-                  className="text-white text-center mt-4 text-lg font-medium"
+                  className="text-white text-center mt-6 text-xl font-medium"
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: 0.2 }}

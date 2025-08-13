@@ -1,10 +1,10 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
-import logo from '../../assets/logo/logo.webp';
-import { Instagram, Send } from "lucide-react";
+import logo from "../../assets/logo/logo.webp";
+import { Instagram, Send, PhoneCall } from "lucide-react";
 
-const navLinks = ["home", "posts", "events", "contacts", "aboutus"];
+const navLinks = ["home", "posts", "events", "contacts", "aboutus","history"];
 
 const socialLinks = [
   {
@@ -51,7 +51,7 @@ const Footer = () => {
                 transition={{ duration: 0.4 }}
               />
               <span className="text-2xl font-bold tracking-tight">
-                {t("title_f", "Greek Community in Tashkent")}
+                {t("title_f", "Greek Cultural Center in Tashkent")}
               </span>
             </div>
             <p className="text-gray-400 text-sm text-center md:text-left">
@@ -85,33 +85,36 @@ const Footer = () => {
           </div>
 
           {/* Contacts */}
-          <div className="flex flex-col items-center md:items-start">
-            <h3 className="text-lg font-semibold mb-4">{t("contact_f", "Contacts")}</h3>
-            <ul className="text-gray-300 text-sm space-y-2">
-              <li>
-                <a href="mailto:greekcommunity.tashkent@gmail.com" className="hover:text-blue-400 transition">
-                  greekcommunity.tashkent@gmail.com
-                </a>
-              </li>
-              <li>
-                <a href="tel:+998712562803" className="hover:text-blue-400 transition">
-                  +998712562803
-                </a>
-              </li>
-              <li>{t("city", "Tashkent, Uzbekistan")}</li>
-            </ul>
-            <div className="mt-4 text-gray-400 text-sm">
-              <p className="mb-2">{t("addressLabel", "Our address")}:</p>
-              <a
-                href="https://yandex.uz/maps/10335/tashkent/house/YkAYdAFgQEcBQFprfX9xcXljZg==/?ll=69.260926%2C41.300502&z=17"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-blue-400 transition-colors"
-              >
-                {t("fullAddress", "Юсуф-Хос-Ходжиб 30А, Ташкент, Узбекистан 100031")}
-              </a>
-            </div>
-          </div>
+         {/* Contacts */}
+<div className="flex flex-col items-center md:items-start">
+  <h3 className="text-lg font-semibold mb-4">{t("contact_f", "Contacts")}</h3>
+  <ul className="text-gray-300 text-sm space-y-3">
+    <li className="flex items-center space-x-2">
+      <PhoneCall className="w-4 h-4 text-blue-400" />
+      <a href="tel:+998712562803" className="hover:text-blue-400 transition">
+        {t("chairman", "Политис Константинос — председатель ГКЦ")}: +998712562803
+      </a>
+    </li>
+    <li className="flex items-center space-x-2">
+      <PhoneCall className="w-4 h-4 text-blue-400" />
+      <a href="tel:+998901782202" className="hover:text-blue-400 transition">
+        {t("vice_chairman", "Абдукаримова Юлия — зам. председателя ГКЦ")}: +998901782202
+      </a>
+    </li>
+    <li>{t("city", "Tashkent, Uzbekistan")}</li>
+  </ul>
+  <div className="mt-4 text-gray-400 text-sm">
+    <p className="mb-2">{t("addressLabel", "Our address")}:</p>
+    <a
+      href="https://yandex.uz/maps/10335/tashkent/house/YkAYdAFgQEcBQFprfX9xcXljZg==/?ll=69.260926%2C41.300502&z=17"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="hover:text-blue-400 transition-colors"
+    >
+      {t("fullAddress", "Юсуф-Хос-Ходжиб 30А, Ташкент, Узбекистан 100031")}
+    </a>
+  </div>
+</div>
 
           {/* Social & Language */}
           <div className="flex flex-col items-center md:items-start">
@@ -148,7 +151,8 @@ const Footer = () => {
           transition={{ duration: 0.6 }}
         >
           <p>
-            &copy; {new Date().getFullYear()} {t("title_f", "Greek Community in Tashkent")}. {t("rights", "All rights reserved.")}
+            &copy; {new Date().getFullYear()} {t("title_f", "Greek Community in Tashkent")}.{" "}
+            {t("rights", "All rights reserved.")}
           </p>
         </motion.div>
       </div>

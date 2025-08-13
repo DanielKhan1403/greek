@@ -3,8 +3,16 @@ from rest_framework.response import Response
 from django.conf import settings
 import logging
 logger = logging.getLogger(__name__)
+from django.core.cache import cache
+from rest_framework.response import Response
+from django.conf import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class CacheInvalidationMixin:
-    cache_prefix = None  # Должен быть определен в ViewSet (например, 'posts', 'events')
+    cache_prefix = None  # например, 'posts' или 'events'
 
     def create(self, request, *args, **kwargs):
         response = super().create(request, *args, **kwargs)
@@ -22,17 +30,29 @@ class CacheInvalidationMixin:
         return response
 
     def invalidate_cache(self):
-        if self.cache_prefix:
-            cache.delete_pattern(f"{self.cache_prefix}_*")
-        else:
-            # Лучше выбросить ошибку, чтобы не чистить весь кэш
+        if not self.cache_prefix:
             logger.warning("cache_prefix не задан, кэш не был сброшен.")
+            return
+
+        try:
+            # Удаляем все ключи по шаблону, учитывая возможный KEY_PREFIX
+            pattern = f"*{self.cache_prefix}_*"
+            cache.delete_pattern(pattern)
+            logger.info(f"Кэш с префиксом '{self.cache_prefix}' очищен")
+        except AttributeError:
+            # Если delete_pattern недоступен — просто удаляем ключи вручную
+            cache.delete(f"{self.cache_prefix}_list")
+            logger.info(f"Ключ {self.cache_prefix}_list удалён")
+
 
 
 class CachedListRetrieveMixin:
     cache_prefix = None  # обязательно указать в ViewSet
 
     def list(self, request, *args, **kwargs):
+        if not self.cache_prefix:
+            return super().list(request, *args, **kwargs)
+
         cache_key = f"{self.cache_prefix}_list"
         result = cache.get(cache_key)
         if result is None:
@@ -44,6 +64,9 @@ class CachedListRetrieveMixin:
         return Response(result)
 
     def retrieve(self, request, *args, **kwargs):
+        if not self.cache_prefix:
+            return super().retrieve(request, *args, **kwargs)
+
         pk = self.kwargs['pk']
         cache_key = f"{self.cache_prefix}_{pk}"
         result = cache.get(cache_key)
@@ -54,6 +77,7 @@ class CachedListRetrieveMixin:
             return Response(response.data)
         logger.info(f"Данные {cache_key} взяты из кэша")
         return Response(result)
+
 
 
 class PublicReadOnlyMixin:

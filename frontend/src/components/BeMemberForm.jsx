@@ -229,6 +229,9 @@ export default function BeMemberForm() {
               <div className="text-sm text-gray-500">{helpTexts[name]}</div>
             </motion.div>
           ))}
+          <div className="text-sm text-gray-600 italic">
+  {t("responsibility_notice")}
+</div>
 
           <motion.button
             type="submit"
