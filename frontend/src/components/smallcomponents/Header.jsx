@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { motion } from "framer-motion";
 import logo from '../../assets/logo/logo.webp';
 
-const navLinks = ["home", "posts", "events", "contacts", "aboutus"];
+const navLinks = ["home", "posts", "events", "contacts", "aboutus","history"];
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,22 +24,27 @@ const Header = () => {
       <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
         <motion.div
-          className="flex items-center space-x-3"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <motion.img
-            src={logo}
-            alt="Greek Community Logo"
-            className="w-12 h-12 rounded-full object-cover shadow-md"
-            whileHover={{ scale: 1.1 }}
-            transition={{ duration: 0.4 }}
-          />
-          <span className="text-2xl font-bold text-gray-800 tracking-tight">
-            Greek Community in Tashkent
-          </span>
-        </motion.div>
+      className="flex items-center space-x-3"
+      initial={{ opacity: 0, x: -20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.img
+        src={logo}
+        alt={t("logo_alt")}
+        className="w-12 h-12 rounded-full object-cover shadow-md"
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.4 }}
+      />
+      <div className="flex flex-col">
+        <span className="text-2xl font-bold text-gray-800 tracking-tight">
+          Greek Cultural Center
+        </span>
+        <span className="text-sm font-medium text-gray-600">
+          in Tashkent
+        </span>
+      </div>
+    </motion.div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8 text-lg">

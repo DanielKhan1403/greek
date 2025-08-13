@@ -1,8 +1,8 @@
-
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
+import { CalendarDaysIcon } from "@heroicons/react/24/outline";
 import { BASE_URL } from "../../BaseUrl";
 
 const LOCAL_STORAGE_KEY = "event-detail-cache";
@@ -45,7 +45,8 @@ export default function EventDetail() {
   const closeImageViewer = () => setSelectedImage(null);
 
   const goToPreviousImage = () => {
-    const newIndex = (currentImageIndex - 1 + event.images.length) % event.images.length;
+    const newIndex =
+      (currentImageIndex - 1 + event.images.length) % event.images.length;
     setSelectedImage(event.images[newIndex]);
     setCurrentImageIndex(newIndex);
   };
@@ -92,17 +93,24 @@ export default function EventDetail() {
         {event.title}
       </motion.h1>
 
-      <motion.p
-        className="text-base sm:text-lg text-gray-500 mb-8 italic text-center"
+      {/* Красивый блок даты */}
+      <motion.div
+        className="flex items-center justify-center gap-3 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white px-6 py-3 rounded-full shadow-lg w-fit mx-auto mb-8"
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
       >
-        {new Date(event.event_date_time).toLocaleString("ru-RU", {
-          dateStyle: "long",
-          timeStyle: "short",
-        })}
-      </motion.p>
+        <CalendarDaysIcon className="w-6 h-6" />
+        <span className="text-lg font-semibold">
+          {new Date(event.event_date_time).toLocaleString("ru-RU", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </span>
+      </motion.div>
 
       <motion.p
         className="text-gray-700 text-base sm:text-lg leading-relaxed mb-12 max-w-4xl mx-auto text-center break-words"
@@ -120,7 +128,11 @@ export default function EventDetail() {
             className="relative group overflow-hidden rounded-2xl shadow-lg hover:shadow-xl transition-all duration-500 bg-white cursor-pointer"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 * index, ease: "easeOut" }}
+            transition={{
+              duration: 0.6,
+              delay: 0.1 * index,
+              ease: "easeOut",
+            }}
             whileHover={{ scale: 1.03 }}
             onClick={() => openImageViewer(image, index)}
           >
@@ -173,7 +185,9 @@ export default function EventDetail() {
                 ›
               </button>
               <motion.img
-                src={`${BASE_URL}${selectedImage.image_url || selectedImage.image}`}
+                src={`${BASE_URL}${
+                  selectedImage.image_url || selectedImage.image
+                }`}
                 alt={selectedImage.caption || "Изображение события"}
                 className="w-full max-h-[80vh] object-contain rounded-lg"
                 initial={{ scale: 0.8, opacity: 0 }}

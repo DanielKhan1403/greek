@@ -22,24 +22,41 @@ export default function EventsList() {
   const error = useSelector((state) => state.events.error);
 
   const [cachedEvents, setCachedEvents] = useState(() => {
-    const cached = localStorage.getItem("cachedEvents");
-    return cached ? JSON.parse(cached) : null;
+    const cached = localStorage.getItem("events_cache");
+    if (cached) {
+      try {
+        const parsed = JSON.parse(cached);
+        if (parsed.data && Array.isArray(parsed.data)) {
+          const cacheDuration = 1000 * 60 * 60; // 1 час
+          if (Date.now() - parsed.timestamp < cacheDuration) {
+            return parsed.data;
+          }
+        }
+      } catch (e) {
+        console.error("Error parsing cached events:", e);
+      }
+    }
+    return null;
   });
 
   useEffect(() => {
-    if (!cachedEvents && status === "idle") {
+    if (status === "idle") {
       dispatch(fetchEvents());
     }
-  }, [status, dispatch, cachedEvents]);
+  }, [status, dispatch]);
 
   useEffect(() => {
     if (reduxEvents?.length) {
+      const cacheData = {
+        data: reduxEvents,
+        timestamp: Date.now(),
+      };
       setCachedEvents(reduxEvents);
-      localStorage.setItem("cachedEvents", JSON.stringify(reduxEvents));
+      localStorage.setItem("events_cache", JSON.stringify(cacheData));
     }
   }, [reduxEvents]);
 
-  const eventsToRender = cachedEvents || [];
+  const eventsToRender = cachedEvents || reduxEvents || [];
 
   if (!eventsToRender.length && status === "loading") {
     return (
@@ -51,7 +68,7 @@ export default function EventsList() {
     );
   }
 
-  if (status === "failed") {
+  if (status === "failed" && !eventsToRender.length) {
     return (
       <div className="flex items-center justify-center min-h-[50vh] bg-gray-50">
         <div className="text-xl font-semibold text-red-600">
@@ -62,8 +79,8 @@ export default function EventsList() {
   }
 
   return (
-    <div className="w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+    <div className="w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-10">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
         {eventsToRender.map((event, i) => (
           <motion.article
             key={event.id}
@@ -77,13 +94,13 @@ export default function EventsList() {
               to={`/events/${event.id}`}
               className="group bg-white rounded-2xl shadow-md hover:shadow-xl overflow-hidden transition-all duration-300 border border-gray-100 flex flex-col"
             >
-              <div className="aspect-[4/3] bg-gray-100 overflow-hidden">
+              <div className="aspect-[4/3] bg-gray-100 overflow-hidden relative">
                 <img
                   src={event.cover}
-                  alt={event.title || "Изображение события"}
+                  alt={event.title || t("event_image_alt")}
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <div className="p-5 flex flex-col justify-between flex-1 space-y-3">

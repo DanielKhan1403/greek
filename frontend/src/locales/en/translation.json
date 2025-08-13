@@ -46,8 +46,8 @@
   "error_phone_number": "Invalid phone number format",
   "error_email": "Invalid email format",
   "error_general": "An error occurred. Please try again.",
-  "about_title": "Welcome to the Greek Cultural Center in Tashkent!",
-  "about_intro": "The Greek Cultural Center is a place where everyone can experience the rich heritage of Greek civilization.",
+ 
+ 
   "what_we_do": "What does the center do?",
   "what_we_do_list": [
     "📚 Sunday school: drawing, singing, dancing, languages",
@@ -63,7 +63,7 @@
   "membership_fee_note": "Membership fee: from 50,000 UZS per month",
   "become_member": "Become a Member",
   "aboutus":"About us",
-  "title_f": "Greek Community in Tashkent",
+  "title_f": "Greek Cultural Center in Tashkent",
   "description": "Connecting the Greek diaspora in Tashkent with culture, community, and heritage.",
   "navigation": "Navigation",
   "contact_f": "Contacts",
@@ -72,5 +72,96 @@
   "rights": "All rights reserved.",
   "addressLabel": "Our address",
   "fullAddress": "Yusuf-Hos-Khojib 30A, Tashkent, Uzbekistan 100031",
-  "city": "Tashkent, Uzbekistan"
+  "city": "Tashkent, Uzbekistan",
+  "chairman": "Politis Konstantinos — Chairman of GCC",
+"vice_chairman": "Abdukarimova Yulia — Deputy Chairman of GCC",
+
+"contact_button_1": "Contact (1)",
+"contact_button_2": "Contact (2)",
+"about_title": "🏛 About Us",
+"about_intro": "The Greek Cultural Center in Tashkent is a community space that unites representatives of the Greek diaspora in Uzbekistan and everyone interested in the rich heritage of Hellas. Since the 1990s, the Center has been an important part of Tashkent's cultural life, holding regular events aimed at preserving and promoting Greek history, language, dance, music, and traditions.",
+
+  "about_mission_title": "🎯 Mission",
+  "about_mission_list": [
+    "Preserving and developing Greek culture in Uzbekistan",
+    "Uniting Greeks living in the republic",
+    "Conducting cultural, educational, and outreach programs",
+    "Strengthening friendship and cooperation between the peoples of Uzbekistan and Greece"
+  ],
+
+  "about_directions_title": "📌 Areas of Activity",
+
+  "culture_events_title": "🎭 Cultural Events",
+  "culture_events_list": [
+    "Celebrating Greek national holidays: Ohi Day (October 28), Greek Independence Day (March 25), Easter and Christmas gatherings",
+    "Organizing concerts, theatrical performances, and festivals",
+    "Participating in city and national holidays (Navruz, Constitution Day, etc.)"
+  ],
+
+  "dance_title": "🕺 Dance Ensemble",
+  "dance_list": [
+    "Children's and adult dance groups",
+    "Teaching traditional Greek dances: sirtaki, kalamatianos, etc.",
+    "Participating in international festivals and tours (including Greece, Russia, Turkey)"
+  ],
+
+  "education_title": "📚 Educational Courses",
+  "education_list": [
+    "Greek language for children and adults",
+    "Workshops in handicrafts, fine arts, vocals, and Greek history",
+    "Summer cultural camp for children"
+  ],
+
+  "international_title": "🤝 International Cooperation",
+  "international_list": [
+    "Cooperation with the Embassy of Greece, the European Union, and international foundations",
+    "Hosting official delegations and guests"
+  ],
+
+  "join_us_title": "✍️ How to Join?",
+  "join_us_list": [
+    "Anyone is welcome to participate in events",
+    "Enrollment is open for dance and language clubs",
+    "Volunteers are always welcome!"
+  ],
+  "history_title": "🏛 Our History",
+    "intro_title": "About Us",
+    "intro_text": "The Greek Cultural Center in Tashkent is a place where the traditions of Hellas meet Uzbek hospitality. We preserve and promote Greek culture, language, and art, bringing together people of all generations.",
+    "history_subtitle": "History",
+    "history_text": "Before its official founding in the 1990s, the Greek diaspora in Tashkent existed as an informal community. People gathered at homes, celebrated traditions, and taught the language. After the USSR's collapse, the Greek Cultural Society of Tashkent was officially registered.",
+    "mission_title": "Our Mission",
+    "mission_text": "Preserving and developing Greek culture in Uzbekistan, promoting intercultural dialogue, and educating youth.",
+    "activities_title": "What We Do",
+    "education_title1": "Education",
+    "education_list1": ["Greek language classes for all ages", "Summer camps and cultural workshops"],
+    "culture_title": "Culture",
+    "culture_list": ["Traditional dance, music, and theater", "Exhibitions and hands-on sessions"],
+    "celebrations_title": "Celebrations",
+    "celebrations_list": ["“Ohi” Day (Oct 28)", "Greek Independence Day (March 25)", "Easter, Christmas, Navruz and more"],
+    "social_title": "Social Work",
+    "social_list": ["Supporting the elderly", "Volunteer programs", "Partnership with the embassy & NGOs"],
+    "history": "History",
+    "responsibility_notice": "By submitting your application, you take responsibility to participate in all projects of the center — both physically and morally, to the best of your abilities.",
+    "holidays_title": "Greek Holidays",
+"holidays": [
+  {
+    "name": "Easter",
+    "date": "variable date (April or May)",
+    "description": "The most important religious holiday, symbolizing the Resurrection of Christ, accompanied by night services, traditional food, and family gatherings."
+  },
+  {
+    "name": "Ohi Day",
+    "date": "October 28",
+    "description": "The day Greece refused Italy's ultimatum in 1940, a symbol of national pride."
+  },
+  {
+    "name": "Independence Day",
+    "date": "March 25",
+    "description": "Anniversary of the start of the Greek War of Independence in 1821."
+  }
+]
+
+
+
+
 }

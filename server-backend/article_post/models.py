@@ -106,6 +106,11 @@ class Post(models.Model):
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
 
+from django.core.exceptions import ValidationError
+from django.utils import timezone
+import uuid
+from django.db import models
+
 class Event(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=100, verbose_name='Заголовок')
@@ -132,10 +137,16 @@ class Event(models.Model):
     def cover_url(self):
         return self.cover.url if self.cover and hasattr(self.cover, 'url') else '/static/images/default_cover.jpg'
 
+    def clean(self):
+        """Запрещаем установку прошедших дат"""
+        if self.event_date_time and self.event_date_time < timezone.now():
+            raise ValidationError({'event_date_time': 'Нельзя выбрать прошедшую дату и время.'})
+
     def __str__(self):
         return f"{self.title} – {self.event_date_time.strftime('%Y-%m-%d %H:%M')}"
 
     class Meta:
         verbose_name = 'Событие'
         verbose_name_plural = 'События'
+
 
