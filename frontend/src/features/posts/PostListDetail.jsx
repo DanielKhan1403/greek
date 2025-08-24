@@ -6,8 +6,10 @@ import { BASE_URL } from "../../BaseUrl";
 
 export default function PostDetail() {
   const { id } = useParams();
+
+  // Загружаем из localStorage по id
   const [post, setPost] = useState(() => {
-    const cached = localStorage.getItem('posts_cache');
+    const cached = localStorage.getItem(`post_${id}`);
     return cached ? JSON.parse(cached) : null;
   });
 
@@ -19,7 +21,7 @@ export default function PostDetail() {
       .get(`${BASE_URL}/api/v1/main/posts/${id}/`)
       .then((res) => {
         setPost(res.data);
-        localStorage.setItem(`posts_cache`, JSON.stringify(res.data));
+        localStorage.setItem(`post_${id}`, JSON.stringify(res.data));
       })
       .catch((err) => {
         console.error("Error fetching post:", err);
@@ -34,12 +36,15 @@ export default function PostDetail() {
   const closeImageViewer = () => setSelectedImage(null);
 
   const goToPreviousImage = () => {
-    const newIndex = (currentImageIndex - 1 + post.images.length) % post.images.length;
+    if (!post?.images) return;
+    const newIndex =
+      (currentImageIndex - 1 + post.images.length) % post.images.length;
     setSelectedImage(post.images[newIndex]);
     setCurrentImageIndex(newIndex);
   };
 
   const goToNextImage = () => {
+    if (!post?.images) return;
     const newIndex = (currentImageIndex + 1) % post.images.length;
     setSelectedImage(post.images[newIndex]);
     setCurrentImageIndex(newIndex);
@@ -97,7 +102,7 @@ export default function PostDetail() {
 
       {/* Image Gallery */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        {post.images.map((img, index) => (
+        {(post.images || []).map((img, index) => (
           <motion.div
             key={img.id}
             className="relative group overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-all duration-500 bg-white cursor-pointer"

@@ -5,9 +5,24 @@ import tailwindcss from '@tailwindcss/vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(),tailwindcss(),],
-   server: {
-    host: true,
-    allowedHosts: ['09f1fbb9e3a7.ngrok-free.app'],
+  
+  server: {
+    proxy: {
+      "/greek-admin": {
+        target: "http://127.0.0.1:8000",  // Django
+        changeOrigin: true,
+      },
+       "/static": {
+        target: "http://127.0.0.1:8000",  // Django static files
+        changeOrigin: true,
+      },
+      "/media": {
+        target: "http://127.0.0.1:8000",  // если картинки в /media
+        changeOrigin: true,
+      },
+    },
   },
+
+
    
 })

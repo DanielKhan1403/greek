@@ -89,7 +89,7 @@ const Contacts = () => {
                 <li className="flex items-center space-x-2">
                   <Phone className="w-4 h-4 text-green-400" />
                   <a
-                    href="tel:+998881000414"
+                    href="tel:+998977090689"
                     className="hover:text-blue-400 transition"
                   >
                     {t("contact_button_1", { defaultValue: "Контакт 1" })}: +998881000414
@@ -98,7 +98,7 @@ const Contacts = () => {
                 <li className="flex items-center space-x-2">
                   <Phone className="w-4 h-4 text-green-400" />
                   <a
-                    href="tel:+998977090689"
+                    href="tel:+998881000414"
                     className="hover:text-blue-400 transition"
                   >
                     {t("contact_button_2", { defaultValue: "Контакт 2" })}: +998977090689
